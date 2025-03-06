@@ -1,0 +1,58 @@
+name: Validate PR
+on:
+  pull_request_target:
+    types:
+      - opened
+      - synchronize
+      - reopened
+    branches:
+      - 'ver/**'
+      - 'latest'
+
+jobs:
+  validate:
+    name: Validate
+    runs-on: ubuntu-latest
+      
+    steps:
+      - name: Get Version Info
+        id: version-info
+        run: |
+          target_branch = ${{github.event.pull_request.base.ref}}
+          target_version = $target_branch
+          if [[ $target_branch == 'latest' ]]; then
+            target_version = ''
+          fi
+          echo "target_branch=$( echo "$target_branch" )" >> $GITHUB_OUTPUT
+          echo "target_version=$( echo "$target_version" )" >> $GITHUB_OUTPUT
+
+      - name: Checkout PR
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+          path: pr
+      
+      - name: Checkout Base
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.base.ref }}
+          persist-credentials: false
+          path: base
+      
+      - name: Download Columns Data
+        uses: carlosperate/download-file-action@v2
+        with:
+          file-url: https://raw.githubusercontent.com/WorkingRobot/EXDSchema/refs/heads/main/columns/${{steps.version-info.outputs.target_branch}}.yml
+          file-name: columns.yml
+    
+      - name: Download EXDTools
+        uses: robinraju/release-downloader@v1
+        with:
+          repository: WorkingRobot/EXDTools
+          tag: '2.0.0'
+          fileName: 'EXDTooler'
+      
+      - name: Run Validation
+        run: |
+          ./EXDTooler validate -c columns.yml -s pr -b base

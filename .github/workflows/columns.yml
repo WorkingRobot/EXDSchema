@@ -44,6 +44,9 @@ jobs:
       - name: Run Column Exporter
         run: ./EXDTooler export-columns -g data/sqpack -o columns/${{steps.downloader.outputs.version}}.yml
       
+      - name: Write Latest
+        run: cp columns/${{steps.downloader.outputs.version}}.yml columns/latest.yml
+      
       - name: Commit Files
         id: commit
         continue-on-error: true
