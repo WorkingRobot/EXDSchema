@@ -20,8 +20,9 @@ jobs:
         run: |
           target_branch = ${{github.event.pull_request.base.ref}}
           target_version = $target_branch
-          if [[ $target_branch == 'latest' ]]; then
-            target_version = ''
+          # Trim "ver/" from the branch name if it exists
+          if [[ $target_version == ver/* ]]; then
+              target_version = $target_version:4
           fi
           echo "target_branch=$( echo "$target_branch" )" >> $GITHUB_OUTPUT
           echo "target_version=$( echo "$target_version" )" >> $GITHUB_OUTPUT
@@ -33,17 +34,17 @@ jobs:
           persist-credentials: false
           path: pr
       
-      - name: Checkout Base
+      - name: Checkout Base (${{github.event.pull_request.base.ref}})
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.base.ref }}
           persist-credentials: false
           path: base
       
-      - name: Download Columns Data
+      - name: Download Columns Data for ${{steps.version-info.outputs.target_branch}}
         uses: carlosperate/download-file-action@v2
         with:
-          file-url: https://raw.githubusercontent.com/WorkingRobot/EXDSchema/refs/heads/main/columns/${{steps.version-info.outputs.target_branch}}.yml
+          file-url: https://raw.githubusercontent.com/WorkingRobot/EXDSchema/refs/heads/main/columns/${{steps.version-info.outputs.target_version}}.yml
           file-name: columns.yml
     
       - name: Download EXDTools
