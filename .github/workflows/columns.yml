@@ -8,19 +8,12 @@ jobs:
   download:
     name: Update Columns
     runs-on: ubuntu-latest
-    env:
-      DOTNET_CLI_TELEMETRY_OPTOUT: true
 
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           persist-credentials: false
-
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '9.0.x'
 
       - name: Retrieve cache
         id: exd-cache
@@ -40,7 +33,7 @@ jobs:
         uses: robinraju/release-downloader@v1
         with:
           repository: WorkingRobot/EXDTools
-          tag: '1.0.0'
+          tag: '1.1.0'
           fileName: 'EXDTooler'
       
       - name: Chmod Executable
