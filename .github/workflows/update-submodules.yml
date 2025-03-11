@@ -1,0 +1,43 @@
+name: Update Submodules
+on:
+  repository_dispatch:
+    types: [version-push]
+
+concurrency:
+  group: ${{github.workflow}}
+  cancel-in-progress: true
+
+jobs:
+  update-submodule:
+    name: Update Submodules
+    runs-on: ubuntu-latest
+      
+    steps:
+      - name: Print Dispatch Info
+        run: |
+          echo "Actor: ${{github.event.client_payload.actor}}"
+          echo "Head Ref: ${{github.event.client_payload.head_ref}}"
+          echo "Head Sha: ${{github.event.client_payload.head_sha}}"
+          echo "Base Ref: ${{github.event.client_payload.base_ref}}"
+
+      - name: Checkout Main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          submodules: recursive
+          fetch-depth: 0
+          persist-credentials: false
+      
+      - name: Update Submodules
+        uses: nick-fields/retry@v3
+        with:
+          timeout_seconds: 90
+          max_attempts: 5
+          command: |
+            git fetch
+            git reset --hard origin/main
+            git submodule update --remote --rebase
+            git add .
+            git commit -m "Update submodules"  || :
+            git push
+        

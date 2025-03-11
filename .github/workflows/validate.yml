@@ -3,7 +3,7 @@ on:
   repository_dispatch:
     types: [version-pr, version-push]
 
-concurrency: 
+concurrency:
   group: ${{github.workflow}}-${{github.event.client_payload.head_ref}}
   cancel-in-progress: true
 
@@ -16,7 +16,7 @@ jobs:
       - name: Register Check
         uses: myrotvorets/set-commit-status-action@v2.0.1
         with:
-          description: Validate Schemas
+          context: Validate Schemas
           sha: ${{github.event.client_payload.head_sha}}
           status: pending
 
@@ -67,7 +67,7 @@ jobs:
         if: always()
         with:
           sha: ${{github.event.client_payload.head_sha}}
-          description: Validate Schemas
+          context: Validate Schemas
           status: ${{job.status}}
       
       - name: Wipe previous comments (PR)
