@@ -10,6 +10,7 @@ fields:
     type: link
     targets: [Item]
   - name: Data
+    pendingName: UnlockLink
   - name: FeatureID
   - name: Unknown0
   - name: IsPurchasable
