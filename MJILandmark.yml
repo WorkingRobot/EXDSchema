@@ -6,6 +6,7 @@ fields:
   - name: Icon
     type: icon
   - name: Unknown0
+    pendingName: UnlockLink
   - name: SGB
     type: array
     count: 7

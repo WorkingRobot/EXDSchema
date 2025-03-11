@@ -8,4 +8,5 @@ fields:
   - name: IconStatus
     type: icon
   - name: Reward
+    pendingName: UnlockLink
   - name: Sort

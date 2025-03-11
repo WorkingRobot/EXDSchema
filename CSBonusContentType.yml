@@ -14,6 +14,7 @@ fields:
     type: link
     targets: [Quest]
   - name: Unknown11
+    pendingName: UnlockLink
   - name: Unknown12
   - name: ContentType
     type: link
