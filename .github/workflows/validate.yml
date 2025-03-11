@@ -47,7 +47,7 @@ jobs:
         uses: robinraju/release-downloader@v1
         with:
           repository: WorkingRobot/EXDTools
-          tag: '4.0.0'
+          tag: '6.0.0'
           fileName: 'EXDTooler'
       
       - name: Chmod Executable
@@ -85,15 +85,15 @@ jobs:
             if (comment.length > 0) {
               for (const c of comment) {
                 await github.graphql(`
-                  mutation MinimizeComment($id: ID!) {
-                    minimizeComment(input:{classifier: OUTDATED, subjectId: $id}) {
+                  mutation MinimizeComment($classifier: ReportedContentClassifiers!, $id: ID!) {
+                    minimizeComment(input:{classifier: $classifier, subjectId: $id}) {
                       minimizedComment {
                         isMinimized
                         viewerCanMinimize
                       }   
                     }
                   }
-                `, { id: c.node_id });
+                `, { classifier: 'OUTDATED', id: c.node_id });
               }
             }
       
