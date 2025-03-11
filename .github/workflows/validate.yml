@@ -28,6 +28,7 @@ jobs:
           echo "Head Ref: ${{github.event.client_payload.head_ref}}"
           echo "Head Sha: ${{github.event.client_payload.head_sha}}"
           echo "Base Ref: ${{github.event.client_payload.base_ref}}"
+          echo "${{toJson(github.event)}}"
 
       - name: Checkout Head (${{github.event.client_payload.head_ref}})
         uses: actions/checkout@v4
