@@ -47,8 +47,8 @@ jobs:
         uses: robinraju/release-downloader@v1
         with:
           repository: WorkingRobot/EXDTools
-          tag: '6.0.0'
           fileName: 'EXDTooler'
+          latest: true
       
       - name: Chmod Executable
         run: chmod +x EXDTooler
