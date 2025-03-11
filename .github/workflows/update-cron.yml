@@ -43,7 +43,7 @@ jobs:
       - name: Hash Columns Old
         id: hash-columns-old
         run: |
-          echo "hash=${{hashFiles('.github/columns.yml')}}" >> $GITHUB_ENV
+          echo "hash=${{hashFiles('.github/columns.yml')}}" >> "$GITHUB_OUTPUT"
 
       - name: Run Column Exporter
         run: ./EXDTooler export-columns -g data/sqpack -o .github/columns.yml
@@ -51,7 +51,7 @@ jobs:
       - name: Hash Columns New
         id: hash-columns-new
         run: |
-          echo "hash=${{hashFiles('.github/columns.yml')}}" >> $GITHUB_ENV
+          echo "hash=${{hashFiles('.github/columns.yml')}}" >> "$GITHUB_OUTPUT"
       
       - name: Create Branch
         if: steps.hash-columns-old.outputs.hash != steps.hash-columns-new.outputs.hash
