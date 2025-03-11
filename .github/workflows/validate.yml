@@ -28,7 +28,6 @@ jobs:
           echo "Head Ref: ${{github.event.client_payload.head_ref}}"
           echo "Head Sha: ${{github.event.client_payload.head_sha}}"
           echo "Base Ref: ${{github.event.client_payload.base_ref}}"
-          echo "${{toJson(github.event)}}"
 
       - name: Checkout Head (${{github.event.client_payload.head_ref}})
         uses: actions/checkout@v4
@@ -73,11 +72,10 @@ jobs:
           status: ${{job.status}}
       
       - name: Wipe previous comments (PR)
-        if: always() && github.event.event_type == 'version-pr'
+        if: always() && github.event.action == 'version-pr'
         uses: actions/github-script@v7
         with:
           script: |
-            const { context, github } = require('@actions/github');
             const comments = (await github.rest.issues.listComments({
               issue_number: context.payload.client_payload.pr_number,
               owner: context.repo.owner,
@@ -100,7 +98,7 @@ jobs:
             }
       
       - name: Post Validation Results (PR)
-        if: always() && github.event.event_type == 'version-pr'
+        if: always() && github.event.action == 'version-pr'
         uses: actions/github-script@v7
         with:
           script: |
